@@ -1,27 +1,17 @@
-# NgCompleteGuideUpdate
+### Anaotmy of an HTTP request
+The URL is the most important part (which is the API endpoint). Using a RESTful API, the verb is also important. The request headers are also important. Some defaultt headers are usually appended for you, but you can also append your own headers.
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.3.5.
+For some HTTP verbs, you can also add a body (which is the core data of the request). POST/PATCH requests would have this.
 
-## Development server
+### Firebase 
+An entire backend solution that gives us a database and REST API. A Google account is required.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+### Sending Requests
+Notice, requests are only set by NG when you subscribe to the observable that wraps the request.
 
-## Code scaffolding
+### Request <Types>
+We are not talking about the type as in 'GET' or 'DELETE'... but the type of object we are sending or receiving in the body.
+In our example, we use the Post interface to indicate what we are working with in the body of the response. This allows for autocompletion
+in writing the code, and its a good practice.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
 
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).

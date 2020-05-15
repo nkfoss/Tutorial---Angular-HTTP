@@ -7,7 +7,7 @@ import { AppComponent } from './app.component';
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [BrowserModule, FormsModule, HttpClientModule],
+  imports: [BrowserModule, FormsModule, HttpClientModule], // The HttpClientModule is needed to send requests
   providers: [],
   bootstrap: [AppComponent]
 })
