@@ -9,7 +9,9 @@ import { Post } from './post.model';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
+
   loadedPosts: Post[] = [];
+  isFetching = false;
 
   constructor(private http: HttpClient) { }
 
@@ -48,6 +50,8 @@ export class AppComponent implements OnInit {
   // The spread operator '...' will pull out all key/value pairs of that object (in our case, the title and content KV pairs)
   // We also append an ID field, which holds the unique identifier provided by FireBase. This handy if we want to delete a single post.
   private fetchPosts() {
+    this.isFetching = true;
+
     this.http
       .get<{ [key:string]: Post }> ( // Here, we specify the type of object contained in the response body. A key (that can be INTERPRETTED as a string) with an object that we can use the Post interface with.
         'https://angular-firebase-practic-4e35f.firebaseio.com/posts.json' // only one arg for GET requests
@@ -64,6 +68,7 @@ export class AppComponent implements OnInit {
       ))
 
       .subscribe(posts => {
+        this.isFetching = false;
         this.loadedPosts = posts;
       })
   }
