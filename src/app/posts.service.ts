@@ -22,18 +22,24 @@ export class PostsService {
         // Send Http request
         const postData: Post = { title: title, content: content }
         this.http
-            .post<{ name: string }>(  // takes two arguments...
+            .post<{ name: string }>(  // POST can take three arguments
 
                 'https://angular-firebase-practic-4e35f.firebaseio.com/posts.json',
                 // 1. The url you find for your realtime database + /posts.json. This second part is necessary to send post requests.
                 // This data will end up in a folder called 'posts'.
 
-                postData
+                postData,
                 // 2. The actual data... ie the request body. 
                 // The Angular HTTP client will turn this from a JS object into a JSON object.
+
+                {
+                    observe: 'response' // This returns the response as a JS object, instead of just returning the response data/body.
+                } 
+                // 3. A JS object to modifiy headers, observes, params, etc.
             )
-            .subscribe(responseData => {
-                console.log(responseData)
+            .subscribe(response => {
+                console.log(response)
+                // console.log(response.body)   // alternatively, we can log the response body (which is what we normally get)
             }, error => {
                 this.errorSubject.next(error.message)
             })
