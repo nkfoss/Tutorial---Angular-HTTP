@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
 import { map, catchError } from 'rxjs/operators';
 import { Subject, throwError } from 'rxjs';
 
@@ -44,9 +44,19 @@ export class PostsService {
     // The spread operator '...' will pull out all key/value pairs of that object (in our case, the title and content KV pairs)
     // We also append an ID field, which holds the unique identifier provided by FireBase. This handy if we want to delete a single post.
     fetchPosts() {
+        let searchParams = new HttpParams();
+        searchParams = searchParams.append('print', 'pretty') // since HttpParams objects are immutable, we append/reassign.
+        searchParams = searchParams.append('bandit', 'maa') // since we have multiple KV pairs, we repeat this step again.
+        // Alternatively, we can define our params when we make the GET request
+
         return this.http
             .get<{ [key: string]: Post }>( // Here, we specify the type of object contained in the response body. A key (that can be INTERPRETTED as a string) with an object that we can use the Post interface with.
-                'https://angular-firebase-practic-4e35f.firebaseio.com/posts.json' // only one arg for GET requests
+                'https://angular-firebase-practic-4e35f.firebaseio.com/posts.json',
+                {
+                    headers: new HttpHeaders({"CustomHeader": "blah blah blah"}), // We can add headers like this
+                    params: searchParams
+                    // params: new HttpParams().set('print', 'pretty')    // we can either define params now, or earlier.
+                }
             )
             .pipe(map(responseData => {    // So we expect the data to be a key (that can be interpretted as string)
                 const postsArray: Post[] = [];                                    // and the value is an object we can use the 'Post' interfac for
