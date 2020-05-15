@@ -5,6 +5,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
 import { InterceptorService } from './interceptor.service';
+import { SecondInterceptorService } from './second-interceptor.service';
 
 @NgModule({
   declarations: [AppComponent],
@@ -14,7 +15,13 @@ import { InterceptorService } from './interceptor.service';
       provide: HTTP_INTERCEPTORS, 
       useClass: InterceptorService, 
       multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS, 
+      useClass: SecondInterceptorService, 
+      multi: true
     }
+    // The order in which you delcare the interceptors is the order they are run in.
   ],
   bootstrap: [AppComponent]
 })
