@@ -1,32 +1,45 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Subject, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators'
+
 import { Post } from './post.model';
 import { PostsService } from './posts.service';
-import { Subject } from 'rxjs';
+
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit {
+
+//========================================================================
+
+export class AppComponent implements OnInit, OnDestroy {
   
   loadedPosts: Post[] = [];
   isFetching = false; // This is only used for displaying the loading indicator
+
   error = null;
+  private errorSub: Subscription;
+
+  //==========================================================================//
 
   constructor(private http: HttpClient, private postsService: PostsService) { }
 
   ngOnInit() {
     this.onFetchPosts();
+    this.errorSub = this.postsService.errorSubject.subscribe( errorMessage => {
+      this.error = errorMessage
+    })
   }
+
+  ngOnDestroy() { this.errorSub.unsubscribe() }
+
+  //===========================================================================//
 
   onCreatePost(postData: Post) {
     this.postsService.createAndStorePost(postData.title, postData.content)
-    .subscribe(responseData => { // You must subscribe to the observable that wraps the request, otherwise Angular will never send the request.
-      console.log(responseData);
-  });
   }
 
   onFetchPosts() {

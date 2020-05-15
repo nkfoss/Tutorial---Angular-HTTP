@@ -1,19 +1,27 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Post } from './post.model';
 import { map } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 
+import { Post } from './post.model';
+
+//=====================================================================================
 
 @Injectable({ providedIn: 'root' })
 export class PostsService {
 
+    errorSubject = new Subject<string>();
+
+    //===========================================================
+
     constructor(private http: HttpClient) { }
+
+    //============================================================
 
     createAndStorePost(title: string, content: string) {
         // Send Http request
         const postData: Post = { title: title, content: content }
-        return this.http
+        this.http
             .post<{ name: string }>(  // takes two arguments...
 
                 'https://angular-firebase-practic-4e35f.firebaseio.com/posts.json',
@@ -24,6 +32,11 @@ export class PostsService {
                 // 2. The actual data... ie the request body. 
                 // The Angular HTTP client will turn this from a JS object into a JSON object.
             )
+            .subscribe(responseData => {
+                console.log(responseData)
+            }, error => {
+                this.errorSubject.next(error.message)
+            })
     }
 
     // Before we pass our response to the component, we transform the response data in a certain way. We want to put all the posts into an array...
