@@ -62,6 +62,9 @@ export class PostsService {
                     headers: new HttpHeaders({ "CustomHeader": "blah blah blah" }), // We can add headers like this
                     params: searchParams
                     // params: new HttpParams().set('print', 'pretty')    // we can either define params now, or earlier.
+
+                    // responseType: 'JSON'   // this can't be used here, since we already declared what ype we were expecting for the body.
+                    // Though it is acceptable to get rid of the type declaration, and just use 'json'. It will do the same thing.
                 }
             )
             .pipe(map(responseData => {    // So we expect the data to be a key (that can be interpretted as string)
@@ -88,7 +91,9 @@ export class PostsService {
             .delete(
                 'https://angular-firebase-practic-4e35f.firebaseio.com/posts.json',
                 {
-                    observe: 'events'
+                    observe: 'events',
+                    responseType: 'text' // This tells Angular how to handle the body of the repsonse. In this case, we're telling Angular to treat it like text.
+                    // Though, we could also handle like JSON, which might be more useful sometimes.
                 })
             .pipe(
                 tap(event => {   // tap allows us to execut some code on the response without altering it or disturbing our subscribe function
