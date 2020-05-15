@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { map } from 'rxjs/operators';
-import { Subject } from 'rxjs';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { map, catchError } from 'rxjs/operators';
+import { Subject, throwError } from 'rxjs';
 
 import { Post } from './post.model';
 
@@ -12,11 +12,11 @@ export class PostsService {
 
     errorSubject = new Subject<string>();
 
-    //===========================================================
+    //========================================================
 
     constructor(private http: HttpClient) { }
 
-    //============================================================
+    //========================================================
 
     createAndStorePost(title: string, content: string) {
         // Send Http request
@@ -56,6 +56,13 @@ export class PostsService {
                     }
                 }
                 return postsArray;
+            }),
+            catchError(errorRes => {
+                /// some code...blah blah
+                // This doesn't actually do anything useful here, but it is an idea of what we COULD do.
+                // We use the rxjs operator catchError, and then we do some stuff with it.
+                // Afterwards, we re-wrap the error in an Observable using throwError.
+                return throwError(errorRes)
             })
     )}
 
