@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
-import { map, catchError } from 'rxjs/operators';
+import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams, HttpEventType } from '@angular/common/http';
+import { map, catchError, tap } from 'rxjs/operators';
 import { Subject, throwError } from 'rxjs';
 
 import { Post } from './post.model';
@@ -34,7 +34,7 @@ export class PostsService {
 
                 {
                     observe: 'response' // This returns the response as a JS object, instead of just returning the response data/body.
-                } 
+                }
                 // 3. A JS object to modifiy headers, observes, params, etc.
             )
             .subscribe(response => {
@@ -59,7 +59,7 @@ export class PostsService {
             .get<{ [key: string]: Post }>( // Here, we specify the type of object contained in the response body. A key (that can be INTERPRETTED as a string) with an object that we can use the Post interface with.
                 'https://angular-firebase-practic-4e35f.firebaseio.com/posts.json',
                 {
-                    headers: new HttpHeaders({"CustomHeader": "blah blah blah"}), // We can add headers like this
+                    headers: new HttpHeaders({ "CustomHeader": "blah blah blah" }), // We can add headers like this
                     params: searchParams
                     // params: new HttpParams().set('print', 'pretty')    // we can either define params now, or earlier.
                 }
@@ -73,17 +73,38 @@ export class PostsService {
                 }
                 return postsArray;
             }),
-            catchError(errorRes => {
-                /// some code...blah blah
-                // This doesn't actually do anything useful here, but it is an idea of what we COULD do.
-                // We use the rxjs operator catchError, and then we do some stuff with it.
-                // Afterwards, we re-wrap the error in an Observable using throwError.
-                return throwError(errorRes)
-            })
-    )}
+                catchError(errorRes => {
+                    /// some code...blah blah
+                    // This doesn't actually do anything useful here, but it is an idea of what we COULD do.
+                    // We use the rxjs operator catchError, and then we do some stuff with it.
+                    // Afterwards, we re-wrap the error in an Observable using throwError.
+                    return throwError(errorRes)
+                })
+            )
+    }
 
     deletePosts() {
         return this.http
-        .delete( 'https://angular-firebase-practic-4e35f.firebaseio.com/posts.json')
+            .delete(
+                'https://angular-firebase-practic-4e35f.firebaseio.com/posts.json',
+                {
+                    observe: 'events'
+                })
+            .pipe(
+                tap(event => {   // tap allows us to execut some code on the response without altering it or disturbing our subscribe function
+
+                    console.log(event);
+                    // You'll notice two outputs in the console with this. The first is an object with type:0. 
+                    // The second looks more familiar and also has a type:4. 
+
+                    if (event.type === HttpEventType.Response) {  // in our case, type 4
+                        console.log(event.body)
+                    }
+
+                    if (event.type === HttpEventType.Sent) {  // type: 0
+                        // Do something other than log the body (because the sent event won't have a body.)
+                    }
+                })
+            )
     }
 }
