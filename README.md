@@ -14,4 +14,7 @@ We are not talking about the type as in 'GET' or 'DELETE'... but the type of obj
 In our example, we use the Post interface to indicate what we are working with in the body of the response. This allows for autocompletion
 in writing the code, and its a good practice.
 
+### Interceptors
+Note the providers array in app.module. Provide: HTTP_INTERCEPTORS says, for all classes that have the intercept token (so classes that send requests), we must use the class indicated. UseClass points us to class needed. Multi: true says, we do not replace interceptors with a single one... so we can have multiple interceptor services.
+
 
