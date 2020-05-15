@@ -63,6 +63,7 @@ ng <div class="container">
       <div *ngIf="error" class="alert alert-danger">
         <h1>An error occurred..</h1>
         <p>{{ error }}</p>
+        <button class="btn btn-danger" (click)=onClearError()>Okay</button>
       </div>
     </div>
   </div>

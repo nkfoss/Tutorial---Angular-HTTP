@@ -48,6 +48,7 @@ export class AppComponent implements OnInit, OnDestroy {
       this.isFetching = false;
       this.loadedPosts = posts;
     }, error => {
+        this.isFetching = false;
         this.error = error.message;
         console.log(error)
     })
@@ -57,6 +58,11 @@ export class AppComponent implements OnInit, OnDestroy {
     this.postsService.deletePosts().subscribe( () => { // There's no response data to handle, but we still want to do something
       this.loadedPosts = []; // We just reset the array, instead of having to fetch an empty array to refresh the display
     })
+  }
+
+  onClearError() {
+    this.error = null;
+
   }
 
 
